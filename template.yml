@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+- AWS::Serverless-2016-10-31
+
+Parameters:
+  ProjectId:
+    Type: String
+    Description: AWS Code Pipeline
+
+Resources:
+  GetFrontend:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: createDeletePipeline.handler
+      Runtime: nodejs4.3
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Code:
+        S3Bucket: "social-event-pipeline-build"
+        S3Key: "CODEBUILD_BUILD_ID/pipelineLambda.zip"

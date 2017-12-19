@@ -1,0 +1,12 @@
+{
+  "name": "Aws pipeline",
+  "version": "1.0.0",
+  "description": "Aws pipeline",
+  "readme": "Aws pipeline",
+  "repository": "https://github.com/fabianschmauder/aws-pipeline",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "devDependencies": {
+    "aws-sdk": "^2.36.0"
+  }
+}

@@ -1,0 +1,12 @@
+version: 0.1
+
+phases:
+  build:
+    commands:
+      - zip -r pipelineLambda.zip lambda; aws s3 cp pipelineLambda.zip s3://social-event-pipeline-build/$CODEBUILD_BUILD_ID/pipelineLambda.zip
+      - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.json
+
+artifacts:
+  type: zip
+  files:
+    - template-export.json
