@@ -9,4 +9,4 @@ Resources:
       Role: "arn:aws:iam::644500628210:role/codepipelinebuildlambda"
       Code:
         S3Bucket: "social-event-pipeline-build"
-        S3Key: "CODEBUILD_BUILD_ID/pipelineLambda.zip"
+        S3Key: "updater/pipelineLambda.zip"
