@@ -1,12 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Parameters:
-  ProjectId:
-    Type: String
-    Description: AWS Code Pipeline
-
 Resources:
-  GetFrontend:
+  SnSCreateDeletePipeline:
     Type: AWS::Lambda::Function
     Properties:
       Handler: createDeletePipeline.handler
