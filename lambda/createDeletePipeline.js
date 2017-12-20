@@ -1,37 +1,57 @@
 'use strict';
 import {getPipeline} from "./pipeline";
 
-console.log('Start function');
-
 const AWS = require('aws-sdk');
-const oAuthToken = process.env.OAuthTOken;
 
 exports.handler = (event, context, callback) => {
-    //console.log('Received event:', JSON.stringify(event, null, 2));
-    const message = event.Records[0].Sns.Message;
-    console.log('From SNS:', message);
-    const commitInfo = JSON.parse(message);
-    console.log('From SNS ref:', commitInfo.ref.replace('refs/heads/', ''));
+    const commitInfo = getCommitInfo(event);
 
-
-    if(commitInfo.created) {
-
-        const codepipeline = new AWS.CodePipeline();
-        const params = getPipeline(commitInfo.ref.replace('refs/heads/', ''),oAuthToken);
-
-        codepipeline.createPipeline(params, function (err, data) {
-            if (err) console.log(err, err.stack); // an error occurred
-            else console.log(data);           // successful response
-        });
-        //TODO create stack
-
-    }
-    if(commitInfo.deleted){
-
-
-        //TODO delete pipeline and stack
+    switch (determineAction(commitInfo)){
+        case 'BRANCH_CREATED':
+            createPipeline(determineBranch(commitInfo));
+            break;
+        case 'BRANCH_DELETED':
+            deletePipeline(determineBranch(commitInfo));
+            break;
+        default:
+            callback(null, "nothing to do!")
     }
 
-
-    callback(null, message);
 };
+
+function getCommitInfo(event) {
+    if(event.createTest){
+        return {
+            ref:"testbranch",
+            created:true
+        }
+    }
+    return JSON.parse(event.Records[0].Sns.Message);
+}
+
+function determineAction(commitInfo) {
+    if(commitInfo.created)
+        return 'BRANCH_CREATED';
+    if(commitInfo.deleted)
+        return 'BRANCH_DELETED';
+    return 'COMMIT_TO_BRANCH'
+}
+
+function determineBranch(commitInfo) {
+    return commitInfo.ref.replace('refs/heads/', '');
+}
+
+function createPipeline(branch) {
+    console.log('create pipeline for branch '+branch);
+    const codepipeline = new AWS.CodePipeline();
+    const params = getPipeline(branch, process.env.O_AUTH_TOKEN);
+
+    codepipeline.createPipeline(params, function (err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log(data);           // successful response
+    });
+}
+
+function deletePipeline(branch) {
+    //TODO delete pipeline
+}
