@@ -11,6 +11,7 @@ function getJsonPipeline(oAuthToken, branch) {
             stages: [
                 sourceStage(oAuthToken, branch),
                 buildStage(),
+                deployStage(branch),
             ],
             artifactStore: {
                 type: "S3",
@@ -79,4 +80,55 @@ function buildStage() {
         ]
     };
 }
+
+
+function deployStage(branch) {
+    return  {
+        name: "Deploy",
+        actions: [
+            {
+                name: "GenerateChangeSet",
+                actionTypeId: {
+                    category: "Deploy",
+                    owner: "AWS",
+                    provider: "CloudFormation",
+                    version: "1"
+                },
+                runOrder: 1,
+                configuration: {
+                    ActionMode: "CHANGE_SET_REPLACE",
+                    Capabilities: "CAPABILITY_IAM",
+                    ChangeSetName: "pipeline-changeset",
+                    RoleArn: "arn:aws:iam::644500628210:role/CodeStarWorker-social-event-CloudFormation",
+                    StackName: "social-event-stack-"+branch,
+                    TemplatePath: npmBuildOutput+"::template-export.json"
+                },
+                outputArtifacts: [],
+                inputArtifacts: [
+                    {
+                        name: npmBuildOutput
+                    }
+                ]
+            },
+            {
+                name: "ExecuteChangeSet",
+                actionTypeId: {
+                    category: "Deploy",
+                    owner: "AWS",
+                    provider: "CloudFormation",
+                    version: "1"
+                },
+                runOrder: 2,
+                configuration: {
+                    ActionMode: "CHANGE_SET_EXECUTE",
+                    ChangeSetName: "pipeline-changeset",
+                    StackName: "social-event-stack-"+branch
+                },
+                outputArtifacts: [],
+                inputArtifacts: []
+            }
+        ]
+    }
+}
+
 module.exports =  getJsonPipeline;
