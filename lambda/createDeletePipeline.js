@@ -8,7 +8,7 @@ exports.handler = (event, context, callback) => {
 
     switch (determineAction(commitInfo)){
         case 'BRANCH_CREATED':
-            createPipeline(determineBranch(commitInfo));
+            createPipeline(determineBranch(commitInfo),callback);
             break;
         case 'BRANCH_DELETED':
             deletePipeline(determineBranch(commitInfo));
@@ -41,14 +41,15 @@ function determineBranch(commitInfo) {
     return commitInfo.ref.replace('refs/heads/', '');
 }
 
-function createPipeline(branch) {
+function createPipeline(branch,callback) {
     console.log('create pipeline for branch '+branch);
     const codepipeline = new AWS.CodePipeline();
     const params = pipelineJson(process.env.O_AUTH_TOKEN,branch);
 
     codepipeline.createPipeline(params, function (err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else console.log(data);           // successful response
+        if (err) console.log(err, err.stack);
+        else console.log(data);
+        callback(err,data)
     });
 }
 
