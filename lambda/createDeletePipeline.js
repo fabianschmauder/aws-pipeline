@@ -44,7 +44,7 @@ function determineBranch(commitInfo) {
 function createPipeline(branch) {
     console.log('create pipeline for branch '+branch);
     const codepipeline = new AWS.CodePipeline();
-    const params = pipelineJson(branch, process.env.O_AUTH_TOKEN);
+    const params = pipelineJson(process.env.O_AUTH_TOKEN,branch);
 
     codepipeline.createPipeline(params, function (err, data) {
         if (err) console.log(err, err.stack); // an error occurred

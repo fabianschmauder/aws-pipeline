@@ -60,7 +60,7 @@ function buildStage() {
                         name: sourceOutput
                     }
                 ],
-                name: "Build js",
+                name: "Buildjs",
                 actionTypeId: {
                     category: "Deploy",
                     owner: "AWS",
