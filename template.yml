@@ -1,5 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+  OAuthToken:
+    Type: String
+    Description: Token to access github
+
 Resources:
   SnSCreateDeletePipeline:
     Type: AWS::Lambda::Function
@@ -10,6 +15,8 @@ Resources:
       Code:
         S3Bucket: "social-event-pipeline-build"
         S3Key: "updater/CODEBUILD_BUILD_ID/pipelineLambda.zip"
+      Environment:
+        O_AUTH_TOKEN: !Ref 'OAuthToken'
   LogPipeline:
     Type: AWS::Lambda::Function
     Properties:

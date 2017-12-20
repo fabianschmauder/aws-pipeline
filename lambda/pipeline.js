@@ -1,4 +1,5 @@
 const sourceOutput = 'SourceArtifact';
+const npmBuildOutput = 'npm-build-output';
 const pipelineRole = 'arn:aws:iam::644500628210:role/AWS-CodePipeline-Service';
 const artifactLocationS3 = 'social-event-build';
 const pipelineNamePrefix = 'Social-event-pipeline-';
@@ -60,17 +61,18 @@ function buildStage() {
                         name: sourceOutput
                     }
                 ],
-                name: "Buildjs",
+                name: "npm",
                 actionTypeId: {
-                    category: "Deploy",
+                    category: "Build",
                     owner: "AWS",
                     version: "1",
-                    provider: "CodeDeploy"
+                    provider: "CodeBuild"
                 },
-                outputArtifacts: [],
+                outputArtifacts: [{
+                    name: npmBuildOutput
+                }],
                 configuration: {
-                    ApplicationName: "CodePipelineDemoApplication",
-                    DeploymentGroupName: "CodePipelineDemoFleet"
+                    ProjectName: "social-event-npm"
                 },
                 runOrder: 1
             }

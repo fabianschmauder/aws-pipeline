@@ -49,7 +49,7 @@ function createPipeline(branch,callback) {
     codepipeline.createPipeline(params, function (err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
-        callback(err,data)
+        callback(err,data);
     });
 }
 
