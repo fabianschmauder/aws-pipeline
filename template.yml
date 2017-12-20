@@ -16,7 +16,7 @@ Resources:
         S3Bucket: "social-event-pipeline-build"
         S3Key: "updater/CODEBUILD_BUILD_ID/pipelineLambda.zip"
       Environment:
-        O_AUTH_TOKEN: !Ref 'OAuthToken'
+        "O_AUTH_TOKEN": !Ref "OAuthToken"
   LogPipeline:
     Type: AWS::Lambda::Function
     Properties:
