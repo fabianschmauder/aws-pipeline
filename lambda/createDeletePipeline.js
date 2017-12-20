@@ -1,6 +1,5 @@
 'use strict';
-import {getPipeline} from "./pipeline";
-
+require('./pipeline');
 const AWS = require('aws-sdk');
 
 exports.handler = (event, context, callback) => {
@@ -24,7 +23,7 @@ function getCommitInfo(event) {
         return {
             ref:"testbranch",
             created:true
-        }
+        };
     }
     return JSON.parse(event.Records[0].Sns.Message);
 }
@@ -34,7 +33,7 @@ function determineAction(commitInfo) {
         return 'BRANCH_CREATED';
     if(commitInfo.deleted)
         return 'BRANCH_DELETED';
-    return 'COMMIT_TO_BRANCH'
+    return 'COMMIT_TO_BRANCH';
 }
 
 function determineBranch(commitInfo) {
@@ -44,7 +43,7 @@ function determineBranch(commitInfo) {
 function createPipeline(branch) {
     console.log('create pipeline for branch '+branch);
     const codepipeline = new AWS.CodePipeline();
-    const params = getPipeline(branch, process.env.O_AUTH_TOKEN);
+    const params = getJsonPipeline(branch, process.env.O_AUTH_TOKEN);
 
     codepipeline.createPipeline(params, function (err, data) {
         if (err) console.log(err, err.stack); // an error occurred
