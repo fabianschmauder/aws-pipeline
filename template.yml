@@ -10,3 +10,12 @@ Resources:
       Code:
         S3Bucket: "social-event-pipeline-build"
         S3Key: "updater/CODEBUILD_BUILD_ID/pipelineLambda.zip"
+  LogPipeline:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: lambda/logPipeline.handler
+      Runtime: nodejs4.3
+      Role: "arn:aws:iam::644500628210:role/codepipelinebuildlambda"
+      Code:
+        S3Bucket: "social-event-pipeline-build"
+        S3Key: "updater/CODEBUILD_BUILD_ID/pipelineLambda.zip"
