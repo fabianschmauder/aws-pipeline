@@ -27,9 +27,6 @@ Resources:
       Code:
         S3Bucket: "social-event-pipeline-build"
         S3Key: "updater/CODEBUILD_BUILD_ID/pipelineLambda.zip"
-  SNSPipelineSubscriber:
-    Type: AWS::SNS::Subscription
-    Properties:
-      Endpoint: !Ref 'SnSCreateDeletePipeline'
-      Protocol: "lambda"
-      TopicArn: "arn:aws:sns:eu-central-1:644500628210:social-event-github-trigger"
+      Environment:
+        Variables:
+          LAMBDAARN: !Ref 'SnSCreateDeletePipeline'
