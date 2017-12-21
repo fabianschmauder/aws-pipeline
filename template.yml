@@ -30,6 +30,6 @@ Resources:
   SNSPipelineSubscriber:
     Type: AWS::SNS::Subscription
     Properties:
-      Endpoint: !Ref "SnSCreateDeletePipeline"
+      Endpoint: !Ref 'SnSCreateDeletePipeline'
       Protocol: "lambda"
       TopicArn: "arn:aws:sns:eu-central-1:644500628210:social-event-github-trigger"
