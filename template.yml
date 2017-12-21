@@ -29,7 +29,7 @@ Resources:
         S3Key: "updater/CODEBUILD_BUILD_ID/pipelineLambda.zip"
       Environment:
         Variables:
-          arn: !Join [':',['arn','aws','lambda', !Ref 'AWS::Region','644500628210','function:' ,!Ref 'SnSCreateDeletePipeline']]
+          arntest: !Join [':',['arn','aws','lambda', !Ref 'AWS::Region','644500628210','function' ,!Ref 'SnSCreateDeletePipeline']]
   UpdateExistingPipelines:
       Type: AWS::Lambda::Function
       Properties:
@@ -45,6 +45,6 @@ Resources:
   SNSPipelineSubscriber:
     Type: AWS::SNS::Subscription
     Properties:
-      Endpoint: !Join [':',['arn','aws','lambda', !Ref 'AWS::Region','644500628210','function:' ,!Ref 'SnSCreateDeletePipeline']]
+      Endpoint: !Join [':',['arn','aws','lambda', !Ref 'AWS::Region','644500628210','function' ,!Ref 'SnSCreateDeletePipeline']]
       Protocol: "lambda"
       TopicArn: "arn:aws:sns:eu-central-1:644500628210:social-event-github-trigger"
