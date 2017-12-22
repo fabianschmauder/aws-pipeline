@@ -87,8 +87,8 @@ function deployStage(branch) {
         name: "Deploy",
         actions: [
             {
-                name: "GenerateChangeSet",
-                actionTypeId: {
+                name: "create update stack",
+                "actionTypeId": {
                     category: "Deploy",
                     owner: "AWS",
                     provider: "CloudFormation",
@@ -96,10 +96,8 @@ function deployStage(branch) {
                 },
                 runOrder: 1,
                 configuration: {
-                    ActionMode: "CHANGE_SET_REPLACE",
-                    Capabilities: "CAPABILITY_IAM",
-                    ChangeSetName: "pipeline-changeset",
-                    RoleArn: "arn:aws:iam::644500628210:role/CodeStarWorker-social-event-CloudFormation",
+                    ActionMode: "CREATE_UPDATE",
+                    RoleArn:"arn:aws:iam::644500628210:role/CodeStarWorker-social-event-CloudFormation",
                     StackName: "social-event-stack-"+branch,
                     TemplatePath: npmBuildOutput+"::template-export.json"
                 },
@@ -109,23 +107,6 @@ function deployStage(branch) {
                         name: npmBuildOutput
                     }
                 ]
-            },
-            {
-                name: "ExecuteChangeSet",
-                actionTypeId: {
-                    category: "Deploy",
-                    owner: "AWS",
-                    provider: "CloudFormation",
-                    version: "1"
-                },
-                runOrder: 2,
-                configuration: {
-                    ActionMode: "CHANGE_SET_EXECUTE",
-                    ChangeSetName: "pipeline-changeset",
-                    StackName: "social-event-stack-"+branch
-                },
-                outputArtifacts: [],
-                inputArtifacts: []
             }
         ]
     }
