@@ -54,5 +54,8 @@ function createPipeline(branch,callback) {
 }
 
 function deletePipeline(branch) {
-    //TODO delete pipeline
+    const codepipeline = new AWS.CodePipeline();
+    codepipeline.deletePipeline({pipelineId:'social-event-pipeline-'+branch} ,function (err, data) {
+        callback(err, data);
+    });
 }

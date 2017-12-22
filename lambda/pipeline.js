@@ -2,7 +2,7 @@ const sourceOutput = 'SourceArtifact';
 const npmBuildOutput = 'npm-build-output';
 const pipelineRole = 'arn:aws:iam::644500628210:role/AWS-CodePipeline-Service';
 const artifactLocationS3 = 'social-event-build';
-const pipelineNamePrefix = 'Social-event-pipeline-';
+const pipelineNamePrefix = 'social-event-pipeline-';
 
 function getJsonPipeline(oAuthToken, branch) {
     return {
