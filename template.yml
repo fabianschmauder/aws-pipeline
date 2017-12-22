@@ -7,6 +7,9 @@ Parameters:
   S3BuildBucket:
       Type: String
       Description: S3 Bucket for build artifacts
+  ReferencePipelineName:
+      Type: String
+      Description: Reference Pipelinename
 Resources:
   SnSCreateDeletePipeline:
     Type: AWS::Lambda::Function
@@ -20,6 +23,7 @@ Resources:
       Environment:
         Variables:
           O_AUTH_TOKEN: !Ref "OAuthToken"
+          REFERENCE_PIPELINE_NAME: !Ref "ReferencePipelineName"
   LogPipeline:
     Type: AWS::Lambda::Function
     Properties:
