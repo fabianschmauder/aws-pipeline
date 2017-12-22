@@ -87,7 +87,7 @@ function deployStage(branch) {
         name: "Deploy",
         actions: [
             {
-                name: "create update stack",
+                name: "createUpdateStack",
                 "actionTypeId": {
                     category: "Deploy",
                     owner: "AWS",
