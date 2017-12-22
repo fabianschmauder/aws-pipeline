@@ -56,6 +56,14 @@ function createPipeline(branch,callback) {
 function deletePipeline(branch) {
     const codepipeline = new AWS.CodePipeline();
     codepipeline.deletePipeline({pipelineId:'social-event-pipeline-'+branch} ,function (err, data) {
-        callback(err, data);
+        if(err) {
+            callback(err, data);
+            return;
+        }
+        const cloudformation = new AWS.CloudFormation();
+        cloudformation.deleteStack({StackName:''},function (err, data) {
+            callback(err, data);
+        })
     });
+
 }
