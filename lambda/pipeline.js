@@ -1,5 +1,6 @@
 const sourceOutput = 'SourceArtifact';
 const npmBuildOutput = 'npm-build-output';
+const mavenBuildOutput = 'maven-build-output';
 const pipelineRole = 'arn:aws:iam::644500628210:role/AWS-CodePipeline-Service';
 const artifactLocationS3 = 'social-event-build';
 const pipelineNamePrefix = 'social-event-pipeline-';
@@ -56,28 +57,57 @@ function buildStage() {
     return {
         name: "Build",
         actions: [
-            {
-                inputArtifacts: [
-                    {
-                        name: sourceOutput
-                    }
-                ],
-                name: "npm",
-                actionTypeId: {
-                    category: "Build",
-                    owner: "AWS",
-                    version: "1",
-                    provider: "CodeBuild"
-                },
-                outputArtifacts: [{
-                    name: npmBuildOutput
-                }],
-                configuration: {
-                    ProjectName: "social-event-npm"
-                },
-                runOrder: 1
-            }
+            buildNpm(),
+            buildMaven()
         ]
+    };
+}
+
+function buildNpm(){
+    return {
+        inputArtifacts: [
+            {
+                name: sourceOutput
+            }
+        ],
+        name: "npm",
+        actionTypeId: {
+            category: "Build",
+            owner: "AWS",
+            version: "1",
+            provider: "CodeBuild"
+        },
+        outputArtifacts: [{
+            name: npmBuildOutput
+        }],
+        configuration: {
+            ProjectName: "social-event-npm"
+        },
+        runOrder: 1
+    };
+}
+
+function buildMaven(){
+    return {
+        inputArtifacts: [
+            {
+                name: sourceOutput
+            }
+        ],
+        name: "maven",
+        actionTypeId: {
+            category: "Build",
+            owner: "AWS",
+            version: "1",
+            provider: "CodeBuild"
+        },
+        outputArtifacts: [{
+            name: mavenBuildOutput
+        }],
+        configuration: {
+            ProjectName: "run-buildspec-base"
+        },
+        runOrder: 1
     };
 }
 
