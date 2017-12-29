@@ -1,4 +1,5 @@
 const sourceOutput = 'SourceArtifact';
+const preBuildOutput = 'pre-build-output';
 const npmBuildOutput = 'npm-build-output';
 const mavenBuildOutput = 'maven-build-output';
 const pipelineRole = 'arn:aws:iam::644500628210:role/AWS-CodePipeline-Service';
@@ -57,9 +58,34 @@ function buildStage() {
     return {
         name: "Build",
         actions: [
+            preBuild(),
             buildNpm(),
             buildMaven()
         ]
+    };
+}
+
+function preBuild(){
+    return {
+        inputArtifacts: [
+            {
+                name: sourceOutput
+            }
+        ],
+        name: "prebuild",
+        actionTypeId: {
+            category: "Build",
+            owner: "AWS",
+            version: "1",
+            provider: "CodeBuild"
+        },
+        outputArtifacts: [{
+            name: preBuildOutput
+        }],
+        configuration: {
+            ProjectName: "prebuildspec"
+        },
+        runOrder: 1
     };
 }
 
@@ -67,7 +93,7 @@ function buildNpm(){
     return {
         inputArtifacts: [
             {
-                name: sourceOutput
+                name: preBuildOutput
             }
         ],
         name: "npm",
@@ -83,7 +109,7 @@ function buildNpm(){
         configuration: {
             ProjectName: "social-event-npm"
         },
-        runOrder: 1
+        runOrder: 2
     };
 }
 
@@ -91,7 +117,7 @@ function buildMaven(){
     return {
         inputArtifacts: [
             {
-                name: sourceOutput
+                name: preBuildOutput
             }
         ],
         name: "maven",
@@ -107,7 +133,7 @@ function buildMaven(){
         configuration: {
             ProjectName: "run-buildspec-base"
         },
-        runOrder: 1
+        runOrder: 2
     };
 }
 
@@ -118,7 +144,7 @@ function deployStage(branch) {
         actions: [
             {
                 name: "createUpdateStack",
-                "actionTypeId": {
+                actionTypeId: {
                     category: "Deploy",
                     owner: "AWS",
                     provider: "CloudFormation",
